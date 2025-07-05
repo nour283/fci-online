@@ -1,0 +1,11 @@
+{
+  "settings": "الإعدادات",
+  "language": "اللغة",
+  "theme": "الوضع",
+  "darkMode": "الوضع الداكن",
+  "lightMode": "الوضع الفاتح",
+  "english": "الإنجليزية",
+  "arabic": "العربية",
+  "selectLanguage": "اختر اللغة",
+  "selectTheme": "اختر الوضع"
+}
