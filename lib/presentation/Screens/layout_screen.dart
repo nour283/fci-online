@@ -1,29 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import 'package:tadrib_hub/presentation/Screens/AboutUs_Screen.dart';
 import 'package:tadrib_hub/presentation/Screens/Layout/layout_manager/layout_provider.dart';
-import 'package:tadrib_hub/presentation/Screens/Layout/pages/PartnersPage%20.dart';
+import 'package:tadrib_hub/presentation/Screens/Layout/pages/PartnersPage.dart';
 import 'package:tadrib_hub/presentation/Screens/Layout/pages/account_popup.dart';
+import 'package:tadrib_hub/presentation/Screens/Layout/pages/language_provider.dart';
 import 'package:tadrib_hub/presentation/Screens/logIn_Screen.dart';
 
-import 'package:tadrib_hub/presentation/Screens/Layout/pages/language_provider.dart';
+import 'package:tadrib_hub/api/providers/user_info_provider.dart';
+
 import 'package:tadrib_hub/utils/assets_manager.dart';
 import 'package:tadrib_hub/utils/color_manager.dart';
-import 'package:tadrib_hub/utils/strings_manager.dart'; 
+import 'package:tadrib_hub/utils/strings_manager.dart';
 
 class LayoutScreen extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   LayoutScreen({super.key});
 
-  void _showAccountPopup(BuildContext context) {
+  void _showAccountPopup(BuildContext context, String userName, String userEmail) {
     showDialog(
       context: context,
       barrierColor: Colors.black.withOpacity(0.4),
       barrierDismissible: true,
-      builder: (BuildContext context) => const AccountPopup(
-        userName: "nour",
-        userEmail: "ahmed@example.com",
+      builder: (BuildContext context) => AccountPopup(
+        userName: userName,
+        userEmail: userEmail,
       ),
     );
   }
@@ -32,6 +35,8 @@ class LayoutScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final languageProvider = Provider.of<LanguageProvider>(context);
     final layoutProvider = Provider.of<LayoutProvider>(context);
+    final userInfo = Provider.of<UserInfoProvider>(context);
+
     final screenWidth = MediaQuery.of(context).size.width;
     final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
 
@@ -98,11 +103,11 @@ class LayoutScreen extends StatelessWidget {
                         flex: 8,
                         child: ListView(
                           padding:
-                              EdgeInsets.symmetric(vertical: isPortrait ? 20 : 10),
+                          EdgeInsets.symmetric(vertical: isPortrait ? 20 : 10),
                           children: [
                             _buildDrawerButton(
                               context: context,
-                              label: AppStrings.homeDrawerLabel(context), 
+                              label: AppStrings.homeDrawerLabel(context),
                               onPressed: () {
                                 layoutProvider.changeBtnNav(0);
                                 Navigator.pop(context);
@@ -112,7 +117,7 @@ class LayoutScreen extends StatelessWidget {
                             ),
                             _buildDrawerButton(
                               context: context,
-                              label: AppStrings.aiDrawerLabel(context), 
+                              label: AppStrings.aiDrawerLabel(context),
                               onPressed: () {
                                 layoutProvider.changeBtnNav(2);
                                 Navigator.pop(context);
@@ -122,7 +127,7 @@ class LayoutScreen extends StatelessWidget {
                             ),
                             _buildDrawerButton(
                               context: context,
-                              label: AppStrings.bookDrawerLabel(context), 
+                              label: AppStrings.bookDrawerLabel(context),
                               onPressed: () {
                                 layoutProvider.changeBtnNav(5);
                                 Navigator.pop(context);
@@ -132,15 +137,15 @@ class LayoutScreen extends StatelessWidget {
                             ),
                             _buildDrawerButton(
                               context: context,
-                              label: AppStrings.partnerDrawerLabel(context), 
+                              label: AppStrings.partnerDrawerLabel(context),
                               onPressed: () {
-                                Navigator.pop(context); 
+                                Navigator.pop(context);
                                 showDialog(
                                   context: context,
                                   barrierColor: Colors.black.withOpacity(0.4),
                                   barrierDismissible: true,
                                   builder: (BuildContext context) =>
-                                      const PartnersPopup(),
+                                  const PartnersPopup(),
                                 );
                               },
                               screenWidth: screenWidth,
@@ -148,7 +153,7 @@ class LayoutScreen extends StatelessWidget {
                             ),
                             _buildDrawerButton(
                               context: context,
-                              label: AppStrings.programDrawerLabel(context), 
+                              label: AppStrings.programDrawerLabel(context),
                               onPressed: () {
                                 Navigator.pop(context);
                               },
@@ -157,12 +162,11 @@ class LayoutScreen extends StatelessWidget {
                             ),
                             _buildDrawerButton(
                               context: context,
-                              label: AppStrings.aboutUsDrawerLabel(context), 
+                              label: AppStrings.aboutUsDrawerLabel(context),
                               onPressed: () {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(
-                                      builder: (context) => AboutUsPage()),
+                                  MaterialPageRoute(builder: (context) => AboutUsPage()),
                                 );
                               },
                               screenWidth: screenWidth,
@@ -175,14 +179,12 @@ class LayoutScreen extends StatelessWidget {
                         flex: 3,
                         child: Center(
                           child: Padding(
-                            padding:
-                                EdgeInsets.all(isPortrait ? 15.0 : 8.0),
+                            padding: EdgeInsets.all(isPortrait ? 15.0 : 8.0),
                             child: ElevatedButton(
                               onPressed: () {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(
-                                      builder: (context) => LoginScreen()),
+                                  MaterialPageRoute(builder: (context) => LoginScreen()),
                                 );
                               },
                               style: ElevatedButton.styleFrom(
@@ -196,7 +198,7 @@ class LayoutScreen extends StatelessWidget {
                                 ),
                               ),
                               child: Text(
-                                AppStrings.logoutButtonLabel(context), 
+                                AppStrings.logoutButtonLabel(context),
                                 style: TextStyle(
                                   fontSize: isPortrait ? 18 : 16,
                                   color: Colors.white,
@@ -216,8 +218,7 @@ class LayoutScreen extends StatelessWidget {
         ),
         resizeToAvoidBottomInset: false,
         backgroundColor: AppColors.backgroundWhite,
-        floatingActionButtonLocation:
-            FloatingActionButtonLocation.centerDocked,
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             layoutProvider.changeBtnNav(2);
@@ -231,48 +232,48 @@ class LayoutScreen extends StatelessWidget {
             color: Color(0xFF3D5CFF),
           ),
         ),
-      bottomNavigationBar: Container(
-  height: 100,
-  child: BottomNavigationBar(
-    onTap: (index) {
-      if (index == 4) { 
-        _showAccountPopup(context);
-      } else {
-        layoutProvider.changeBtnNav(index);
-      }
-    },
-    selectedFontSize: 12,
-    unselectedFontSize: 10,
-    currentIndex: layoutProvider.selectedIndex.clamp(0, 4),
-    showSelectedLabels: true,
-    backgroundColor: AppColors.white,
-    type: BottomNavigationBarType.fixed,
-    fixedColor: const Color(0xFF3D5CFF),
-    unselectedItemColor: AppColors.iconGray,
-    items: [ 
-      BottomNavigationBarItem(
-        icon: const Icon(Icons.home_filled),
-        label: AppStrings.homeBottomNavLabel(context), 
-      ),
-      BottomNavigationBarItem(
-        icon: const Icon(Icons.menu_book),
-        label: AppStrings.courseBottomNavLabel(context), 
-      ),
-      BottomNavigationBarItem(
-        icon: const SizedBox(height: 0),
-        label: AppStrings.aiAssistantBottomNavLabel(context), 
-      ),
-      BottomNavigationBarItem(
-        icon: const Icon(Icons.contact_mail),
-        label: AppStrings.contactUsBottomNavLabel(context), 
-      ),
-      BottomNavigationBarItem(
-        icon: const Icon(Icons.person),
-        label: AppStrings.accountBottomNavLabel(context),
-      ),
-    ],
-  ),
-),
+        bottomNavigationBar: Container(
+          height: 100,
+          child: BottomNavigationBar(
+            onTap: (index) {
+              if (index == 4) {
+                _showAccountPopup(context, userInfo.userName, userInfo.userEmail);
+              } else {
+                layoutProvider.changeBtnNav(index);
+              }
+            },
+            selectedFontSize: 12,
+            unselectedFontSize: 10,
+            currentIndex: layoutProvider.selectedIndex.clamp(0, 4),
+            showSelectedLabels: true,
+            backgroundColor: AppColors.white,
+            type: BottomNavigationBarType.fixed,
+            fixedColor: const Color(0xFF3D5CFF),
+            unselectedItemColor: AppColors.iconGray,
+            items: [
+              BottomNavigationBarItem(
+                icon: const Icon(Icons.home_filled),
+                label: AppStrings.homeBottomNavLabel(context),
+              ),
+              BottomNavigationBarItem(
+                icon: const Icon(Icons.menu_book),
+                label: AppStrings.courseBottomNavLabel(context),
+              ),
+              BottomNavigationBarItem(
+                icon: const SizedBox(height: 0),
+                label: AppStrings.aiAssistantBottomNavLabel(context),
+              ),
+              BottomNavigationBarItem(
+                icon: const Icon(Icons.contact_mail),
+                label: AppStrings.contactUsBottomNavLabel(context),
+              ),
+              BottomNavigationBarItem(
+                icon: const Icon(Icons.person),
+                label: AppStrings.accountBottomNavLabel(context),
+              ),
+            ],
+          ),
+        ),
         body: layoutProvider.screens[layoutProvider.selectedIndex],
       ),
     );

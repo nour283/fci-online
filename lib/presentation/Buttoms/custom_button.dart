@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:tadrib_hub/utils/color_manager.dart';
 import 'package:tadrib_hub/utils/values_manager.dart';
 
-
 class CustomButton extends StatelessWidget {
   final String text;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;  // Nullable to allow disabling button
   final double? width;
   final double? height;
 

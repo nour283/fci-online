@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import '../services/local_storage_service.dart';
+import 'package:provider/provider.dart';
+import 'user_info_provider.dart';
 
 class AuthProvider with ChangeNotifier {
   bool isLoading = false;
@@ -36,6 +38,10 @@ class AuthProvider with ChangeNotifier {
         }
         await LocalStorageService.saveUserName(userName);
         await LocalStorageService.saveEmail(email);
+
+        // حدث بيانات المستخدم في UserInfoProvider
+        final userInfoProvider = Provider.of<UserInfoProvider>(context, listen: false);
+        await userInfoProvider.loadUserInfo();
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -86,6 +92,10 @@ class AuthProvider with ChangeNotifier {
         }
         await LocalStorageService.saveUserName(userName);
         await LocalStorageService.saveEmail(email);
+
+        // حدث بيانات المستخدم في UserInfoProvider
+        final userInfoProvider = Provider.of<UserInfoProvider>(context, listen: false);
+        await userInfoProvider.loadUserInfo();
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
