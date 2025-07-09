@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tadrib_hub/models/Courses_Model.dart';
 import 'package:tadrib_hub/presentation/Screens/Layout/pages/CourseDetail.dart';
 import 'package:tadrib_hub/presentation/Screens/Layout/pages/account_popup.dart';
 import 'package:tadrib_hub/presentation/Screens/Layout/pages/ai/ai_screen.dart';
@@ -7,17 +8,14 @@ import 'package:tadrib_hub/presentation/Screens/Layout/pages/contact_screen.dart
 import 'package:tadrib_hub/presentation/Screens/Layout/pages/course_screen.dart';
 import 'package:tadrib_hub/presentation/Screens/Layout/pages/home_screen.dart';
 
-
 class LayoutProvider extends ChangeNotifier {
   int _selectedIndex = 0;
-  
-  String? _selectedCourseName;
-  String? _selectedCourseType;
+
+  Courses? _selectedCourse; // ✅ الكورس اللي هنعرض تفاصيله
   bool _shouldNavigateToCourseDetail = false;
-  
+
   int get selectedIndex => _selectedIndex;
-  String? get selectedCourseName => _selectedCourseName;
-  String? get selectedCourseType => _selectedCourseType;
+  Courses? get selectedCourse => _selectedCourse;
   bool get shouldNavigateToCourseDetail => _shouldNavigateToCourseDetail;
 
   final List<Widget> screens = [
@@ -41,14 +39,14 @@ class LayoutProvider extends ChangeNotifier {
       notifyListeners();
     } else {
       debugPrint('Invalid index: $index - Max allowed: ${screens.length - 1}');
-      _selectedIndex = 0; 
+      _selectedIndex = 0;
       notifyListeners();
     }
   }
 
-  void navigateToCourse(String courseName, String courseType) {
-    _selectedCourseName = courseName;
-    _selectedCourseType = courseType;
+  /// ✅ لما المستخدم يضغط على كورس
+  void navigateToCourse(Courses course) {
+    _selectedCourse = course;
     _shouldNavigateToCourseDetail = true;
     _selectedIndex = 1;
     notifyListeners();
@@ -56,19 +54,18 @@ class LayoutProvider extends ChangeNotifier {
 
   void resetCourseNavigation() {
     _shouldNavigateToCourseDetail = false;
-    _selectedCourseName = null;
-    _selectedCourseType = null;
+    _selectedCourse = null;
     notifyListeners();
   }
 
+  /// ✅ ترجّع صفحة تفاصيل الكورس
   Widget getCourseDetailPage() {
-    if (_selectedCourseName != null && _selectedCourseType != null) {
-      return CourseDetailsPage( 
-        key: ValueKey('course_detail_${_selectedCourseName}_${_selectedCourseType}'),
-        courseName: _selectedCourseName!,
-        courseType: _selectedCourseType!,
+    if (_selectedCourse != null) {
+      return CourseDetailsPage(
+        key: ValueKey('course_detail_${_selectedCourse!.id}'),
+        course: _selectedCourse!,
       );
     }
-    return CoursesScreen(); 
+    return CoursesScreen();
   }
 }

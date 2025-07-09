@@ -215,17 +215,14 @@ class CourseDetailsRecommendedSection extends StatelessWidget {
   }
 
   void _navigateToCourseDetails(BuildContext context, Courses course) {
-    // <--- التعديل هنا: استخدام Navigator.push
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => CourseDetailsPage(
-          courseName: course.title ?? 'بدون عنوان',
-          courseType: course.category ?? 'غير محدد',
-          courseImageUrl: course.courseImg?.url,
-
+          course: course, // 👈 نمرر الكورس نفسه
         ),
       ),
     );
   }
+
 }

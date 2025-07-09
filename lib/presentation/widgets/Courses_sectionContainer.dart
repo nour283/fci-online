@@ -23,19 +23,15 @@ class SectionContainer extends StatelessWidget {
   }) : super(key: key);
 
   // تم تعديل هذه الدالة لتستقبل courseImageUrl و coursePrice
-  void _navigateToCourse(BuildContext context, String courseName, String courseType, String? courseImageUrl, int coursePrice) {
+  void _navigateToCourse(BuildContext context, Courses course) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => CourseDetailsPage(
-          courseName: courseName,
-          courseType: courseType,
-          courseImageUrl: courseImageUrl,
-
-        ),
+        builder: (context) => CourseDetailsPage(course: course),
       ),
     );
   }
+
 
   // البيانات الثابتة لقسم التسويق (تم تحويلها إلى كائنات Courses بسيطة)
   List<Courses> _getStaticMarketingCoursesAsCourses() {
@@ -134,7 +130,8 @@ class SectionContainer extends StatelessWidget {
                                     description: course.description ?? 'لا يوجد وصف',
                                     instructor: course.instructor?.userName ?? 'غير محدد',
                                     price: '${course.price ?? 0}\$',
-                                    onTap: () => _navigateToCourse(context, course.title ?? '', course.category ?? '', course.courseImg?.url, course.price?.toInt() ?? 0),
+                                    onTap: () => _navigateToCourse(context, course),
+
                                   ),
                                 );
                               }).toList(),

@@ -39,7 +39,6 @@ class AuthProvider with ChangeNotifier {
         await LocalStorageService.saveUserName(userName);
         await LocalStorageService.saveEmail(email);
 
-        // حدث بيانات المستخدم في UserInfoProvider
         final userInfoProvider = Provider.of<UserInfoProvider>(context, listen: false);
         await userInfoProvider.loadUserInfo();
       }
@@ -77,23 +76,22 @@ class AuthProvider with ChangeNotifier {
         password: password,
       );
 
+      print('Login API result: $result');
+
       isLoading = false;
       notifyListeners();
 
-      final success = result['success'] == true;
-      final message = result['message']?.toString() ?? "Login success";
+      final token = result['token'];
+      final success = token != null && token.toString().isNotEmpty;
+      final message = success ? "Login success" : "Login failed";
 
       if (success) {
-        final token = result['token'];
-        final userName = result['user']?['userName'] ?? 'User';
+        final userName = result['userName'] ?? result['user']?['userName'] ?? 'User';
 
-        if (token != null) {
-          await LocalStorageService.saveToken(token);
-        }
+        await LocalStorageService.saveToken(token);
         await LocalStorageService.saveUserName(userName);
         await LocalStorageService.saveEmail(email);
 
-        // حدث بيانات المستخدم في UserInfoProvider
         final userInfoProvider = Provider.of<UserInfoProvider>(context, listen: false);
         await userInfoProvider.loadUserInfo();
       }

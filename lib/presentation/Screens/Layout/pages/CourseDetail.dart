@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tadrib_hub/models/Courses_Model.dart';
 import 'package:tadrib_hub/presentation/widgets/course_details_header.dart';
 import 'package:tadrib_hub/presentation/widgets/course_details_info.dart';
 import 'package:tadrib_hub/presentation/widgets/course_details_study_button.dart';
@@ -7,15 +8,11 @@ import 'package:tadrib_hub/presentation/widgets/course_details_recommended_secti
 import 'package:tadrib_hub/utils/strings_manager.dart';
 
 class CourseDetailsPage extends StatelessWidget {
-  final String courseName;
-  final String courseType;
-  final String? courseImageUrl; // <--- إضافة هذه الخاصية الجديدة
+  final Courses course; // ✅ استلام كائن كورس كامل
 
   const CourseDetailsPage({
     Key? key,
-    required this.courseName,
-    required this.courseType,
-    this.courseImageUrl, // <--- جعلها اختيارية
+    required this.course,
   }) : super(key: key);
 
   @override
@@ -37,6 +34,11 @@ class CourseDetailsPage extends StatelessWidget {
       studyButtonWidth = 230;
     }
 
+    // ✅ استخراج البيانات من كائن الكورس
+    final String courseName = course.title ?? "Course";
+    final String courseType = course.category ?? "General";
+    final String? courseImageUrl = course.courseImg?.url;
+
     return Directionality(
       textDirection: AppStrings.isArabic(context) ? TextDirection.rtl : TextDirection.ltr,
       child: Scaffold(
@@ -56,12 +58,13 @@ class CourseDetailsPage extends StatelessWidget {
                         basePadding: basePadding,
                         titleFontSize: infoTitleFontSize,
                         descriptionFontSize: infoDescriptionFontSize,
-                        imageUrl: courseImageUrl, // <--- تمرير الـ imageUrl هنا
+                        imageUrl: courseImageUrl,
                       ),
                       CourseDetailsStudyButton(
                         basePadding: basePadding,
                         buttonWidth: studyButtonWidth,
                         buttonFontSize: buttonFontSize,
+                        course: course, // ✅ إرسال كائن الكورس
                       ),
                       CourseDetailsIncludedFeatures(
                         basePadding: basePadding,

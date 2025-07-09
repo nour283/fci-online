@@ -13,6 +13,9 @@ import 'package:tadrib_hub/api/providers/user_info_provider.dart';
 import 'package:tadrib_hub/utils/assets_manager.dart';
 import 'package:tadrib_hub/utils/color_manager.dart';
 import 'package:tadrib_hub/utils/strings_manager.dart';
+import 'package:tadrib_hub/api/services/local_storage_service.dart';
+
+import 'PerformanceDashboard/PerformanceDashboard.dart';
 
 class LayoutScreen extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -39,6 +42,7 @@ class LayoutScreen extends StatelessWidget {
 
     final screenWidth = MediaQuery.of(context).size.width;
     final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+
 
     return Directionality(
       textDirection: languageProvider.isArabic ? TextDirection.rtl : TextDirection.ltr,
@@ -153,9 +157,22 @@ class LayoutScreen extends StatelessWidget {
                             ),
                             _buildDrawerButton(
                               context: context,
-                              label: AppStrings.programDrawerLabel(context),
-                              onPressed: () {
-                                Navigator.pop(context);
+                              label: 'Dashboard',
+                              onPressed: () async {
+                                Navigator.pop(context); // إغلاق الـ drawer أولاً
+
+                                // الحصول على الـ token من LocalStorageService
+                                String? token = await LocalStorageService.getToken();
+
+                                // انتظار قصير قبل التنقل
+                                Future.delayed(const Duration(milliseconds: 100), () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => PerformanceDashboard(token: token ?? ''),
+                                    ),
+                                  );
+                                });
                               },
                               screenWidth: screenWidth,
                               isPortrait: isPortrait,
@@ -184,7 +201,7 @@ class LayoutScreen extends StatelessWidget {
                               onPressed: () {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => LoginScreen()),
+                                  MaterialPageRoute(builder: (context) => const LoginScreen()),
                                 );
                               },
                               style: ElevatedButton.styleFrom(
@@ -232,7 +249,7 @@ class LayoutScreen extends StatelessWidget {
             color: Color(0xFF3D5CFF),
           ),
         ),
-        bottomNavigationBar: Container(
+        bottomNavigationBar: SizedBox(
           height: 100,
           child: BottomNavigationBar(
             onTap: (index) {

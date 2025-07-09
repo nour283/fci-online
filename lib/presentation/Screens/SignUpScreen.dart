@@ -112,6 +112,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 : AppStrings.createAccount(context),
                             onPressed: authProvider.isLoading ? null : _submit,
                           ),
+                          const SizedBox(height: 16),
+                          buildLoginText(context),
                         ],
                       ),
                     ),
@@ -134,6 +136,29 @@ class _SignUpScreenState extends State<SignUpScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget buildLoginText(BuildContext context) {
+    return Center(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(AppStrings.alreadyHaveAccount(context)),
+          TextButton(
+            onPressed: () {
+              context.go(AppRoutes.login);
+            },
+            child: Text(
+              AppStrings.logIn(context),
+              style: TextStyle(
+                color: AppColors.primaryBlue,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
